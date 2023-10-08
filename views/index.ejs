@@ -1,0 +1,27 @@
+<%- include("partials/header.ejs") %>
+<!----the header url is always relative to the views folder -->
+<!--  the header.ejs contains links that are relative to the public folder -->
+
+
+  <h1>Home Tasks</h1>
+  <form action="/submit" method="POST">
+    <input type="text" name="Task" placeholder="Enter Task">
+    <input type="date" id="DueDate" name="DueDate" placeholder="Select Date">
+    <input type="button" class="greenButton" value="Add Task">
+  </form>
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Task</th>
+      <th>Due Date</th>
+    </tr>
+    <tr>
+      <td><button type="button" class="redButton">Not Done!</button></td>
+      <td>Do What Must be done at home</td>
+      <td>Tomorrow</td>
+    </tr>
+  </table>
+  
+    
+
+  <%- include("partials/footer.ejs") %>
