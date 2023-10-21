@@ -5,9 +5,10 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <h1>Home Tasks</h1>
-  <form action="/submit" method="POST">
+  <form class="item" action="/submit" method="POST">
     <input type="text" name="Task" placeholder="Enter Task">
     <input type="date" id="DueDate" name="DueDate" placeholder="Select Date">
+    <input type="time" id="DueTime" name="DueTime" placeholder="Select Time">
     <input type="submit" value="Add Task">
   </form>
   <table>
@@ -16,28 +17,31 @@
       <th>Task</th>
       <th>Due Date</th>
     </tr>
-    <script>
-      function myFunction(element, color) {
-        element.style.color = color;
-        var index = element.id;
-        console.log("You just pushed the: "+element.id+" button");
-        element.id = "Done "+index;
-      }
-      </script>
+
+      <% function formatDateTimeToString(date) { %>
+      <% var dd = (date.getDate() < 10 ? '0' : '') + date.getDate(); %>
+      <% var MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1); %>
+      <% var yyyy = date.getFullYear(); %>
+      <% var hours = (date.getHours() < 10 ? '0' : '') + date.getHours(); %>
+      <% var minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() %>
+      <% return (yyyy + "." + MM + "." + dd + ' ' + hours + ':' + minutes); %>
+      
+      <% } %>
+
+      <% console.log("The Client received: "+JSON.stringify(locals.Tasks)); %>
       <%  if(locals.Tasks){%>
-        <%var index=0; %>
-        <% locals.Tasks.forEach(task =>{ %>
-        <tr onclick="myFunction(this, 'red')" id= <%= index %> >
         
-        <% if(!task.isDone){%>
-          <td type="button"  class="redButton">Not Done!</button></td>
-          <td><%= task.newTask %></td>
-          <td><%= task.dueDate %></td>
-        <% } %>
-        <% index++; %>
+        <% locals.Tasks.forEach(task =>{ %>
+        <tr>
+          
+            <form action="/delete" method="post">
+              <td><input type="checkbox" name="checkbox" value="<%=task._id%>" onChange="this.form.submit()"></td>         
+              <td><%= task.task %></td>
+              <td><%= formatDateTimeToString(task.date) %></td>
+            </form>  
+          
         </tr>
-        <%});
-      }%>
+        <%});}%>
     </tr>
   </table>
 

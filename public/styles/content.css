@@ -34,8 +34,12 @@ p {
   object-fit: cover;
   border-radius: 50%;
 }
-form {
+form.item {
   float: right;
+  margin-top: 10px;
+}
+form {
+  float: left;
   margin-top: 10px;
 }
 table, th, td{
