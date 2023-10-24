@@ -29,17 +29,14 @@
       <% } %>
 
       <% console.log("The Client received: "+JSON.stringify(locals.Tasks)); %>
-      <%  if(locals.Tasks){%>
-        
+      <%  if(locals.Tasks){%>        
         <% locals.Tasks.forEach(task =>{ %>
-        <tr>
-          
+        <tr>        
             <form action="/delete" method="post">
               <td><input type="checkbox" name="checkbox" value="<%=task._id%>" onChange="this.form.submit()"></td>         
               <td><%= task.task %></td>
               <td><%= formatDateTimeToString(task.date) %></td>
-            </form>  
-          
+            </form>           
         </tr>
         <%});}%>
     </tr>

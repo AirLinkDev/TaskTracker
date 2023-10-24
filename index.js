@@ -15,22 +15,29 @@ const itemsSchema = new mongoose.Schema({
       isDone: Boolean
 });
 const Item = mongoose.model("Item",itemsSchema);
-/*
-const laundry = new Item({
-  task: "laundry",
+
+const listSchema = new mongoose.Schema({
+  name: String,
+  items: [itemsSchema]
+  });
+const List = mongoose.model("List",listSchema);
+
+const item1 = new Item({
+  task: "Welcome to your todo list!",
   date: new Date()
 });
 
-const filter = new Item({
-  task: "change filter",
+const item2 = new Item({
+  task: "Hit the + button to add a new item",
   date: new Date()
 });
 
-const breakfast = new Item({
-  task: "make breakfast",
+const item3 = new Item({
+  task: "<-- Hit this to delete an item>",
   date: new Date()
 });
-*/
+
+const defaultItems = [item1,item2,item3];
 /*
 await Item.insertMany([
  laundry,filter,breakfast
@@ -40,12 +47,43 @@ await Item.insertMany([
 Step 1: Render the home page "/" index.ejs
 */
 app.get("/", async(req, res) => {
+  
+  const tasks = await Item.find();
+  const data = {
+    Tasks: tasks
+  }
+  //console.log("DB retreived tasks: "+JSON.stringify(data));
+  res.render("index.ejs",data);
+});
+//My Router:
+app.get("/:customListName", async(req, res) => {
+  console.log("Route: "+req.params.customListName);
+  const tempList = await List.findOne({name : req.params.customListName});
+  if(tempList){
+  console.log("we found a "+req.params.customListName+" list: ");
+  }else{
+    console.log("we created a "+req.params.customListName+" list: ");
+  const list = new List({
+    name: req.params.customListName,
+    items: defaultItems
+  })
+  list.save();
+
+}
+const tasks = await List.findOne({name : req.params.customListName});
+const data = {
+  Tasks: tasks.items
+}
+console.log("DB retreived task.items: "+JSON.stringify(data));
+res.render("index.ejs",data);
+  /*
   const tasks = await Item.find();
   const data = {
     Tasks: tasks
   }
   console.log("DB retreived tasks: "+JSON.stringify(data));
   res.render("index.ejs",data);
+  */
 });
 /*
 Step 2: Make sure that static files are linked to and the CSS shows up.
@@ -54,11 +92,7 @@ Step 2: Make sure that static files are linked to and the CSS shows up.
 /*
 
 */
-app.get("/workTask", async (req, res) => {
-  data = await Item.find();
-  console.log("DB retreived tasks: "+JSON.stringify(data.Tasks));
-  res.render("index.ejs",data);
-});
+
 
 /*
 The list of tasks created by the user has session lifespan
@@ -91,6 +125,7 @@ app.post("/submit",async (req, res) => {
   });
 
   app.post("/delete",async (req, res) => {
+    //Could also have used <ModelName>.findByIdAndRemove(<Id>)
     await Item.deleteOne({_id : req.body.checkbox});
     const tasks = await Item.find();
   
