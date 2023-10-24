@@ -56,7 +56,13 @@ app.get("/", async(req, res) => {
   res.render("index.ejs",data);
 });
 //My Router:
+
 app.get("/:customListName", async(req, res) => {
+  if(req.params.customListName=="favicon.ico"){
+    console.log("The URL argument I did not expect: "+req.params.customListName);
+    
+    
+  }
   console.log("Route: "+req.params.customListName);
   const tempList = await List.findOne({name : req.params.customListName});
   if(tempList){
